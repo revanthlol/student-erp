@@ -6,6 +6,15 @@ import Card from '../components/Card';
 import PageTitle from '../components/PageTitle';
 import TabButton from '../components/TabButton';
 
+const ProgressBar = ({ value, max }) => {
+    const percentage = (value / max) * 100;
+    return (
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="bg-purple-600 h-2.5 rounded-full" style={{ width: `${percentage}%` }}></div>
+        </div>
+    );
+};
+
 const CoursesPage = () => {
     const [activeTab, setActiveTab] = useState('current');
     const { currentSemester, previousSemesters } = studentData.courses;
@@ -22,18 +31,29 @@ const CoursesPage = () => {
                     {currentSemester.map(course => (
                         <Card key={course.code}>
                             <h3 className="text-lg font-bold text-purple-800">{course.title}</h3>
-                            <p className="text-sm text-gray-500 mb-2">{course.code} | {course.credits} Credits</p>
-                            <div className="mt-4 space-y-2">
-                               <p className="text-sm font-semibold">Internal Marks:</p>
-                               <div className="text-xs">Midterm 1: {course.internalMarks.midterm1}/{course.maxMarks.midterm1}</div>
-                               <div className="text-xs">Midterm 2: {course.internalMarks.midterm2}/{course.maxMarks.midterm2}</div>
-                               <div className="text-xs">Quiz: {course.internalMarks.quiz}/{course.maxMarks.quiz}</div>
+                            <p className="text-sm text-gray-500 mb-4">{course.code} | {course.credits} Credits</p>
+                            
+                            <p className="text-sm font-semibold mb-2">Internal Marks:</p>
+                            <div className="space-y-3 text-xs">
+                                <div>
+                                    <div className="flex justify-between mb-1"><span>Midterm 1</span><span>{course.internalMarks.midterm1}/{course.maxMarks.midterm1}</span></div>
+                                    <ProgressBar value={course.internalMarks.midterm1} max={course.maxMarks.midterm1} />
+                                </div>
+                                <div>
+                                    <div className="flex justify-between mb-1"><span>Midterm 2</span><span>{course.internalMarks.midterm2}/{course.maxMarks.midterm2}</span></div>
+                                    <ProgressBar value={course.internalMarks.midterm2} max={course.maxMarks.midterm2} />
+                                </div>
+                                <div>
+                                    <div className="flex justify-between mb-1"><span>Quiz</span><span>{course.internalMarks.quiz}/{course.maxMarks.quiz}</span></div>
+                                    <ProgressBar value={course.internalMarks.quiz} max={course.maxMarks.quiz} />
+                                </div>
                             </div>
                         </Card>
                     ))}
                 </div>
             )}
             {activeTab === 'previous' && (
+                /* ... Previous Semesters code remains the same ... */
                 <div className="space-y-4">
                     {Object.entries(previousSemesters).map(([semester, courses]) => (
                          <details key={semester} className="bg-white p-4 rounded-lg shadow-sm">
